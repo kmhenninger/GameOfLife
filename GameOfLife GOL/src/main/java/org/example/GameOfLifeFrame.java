@@ -14,12 +14,11 @@ public class GameOfLifeFrame extends JFrame {
     private final JToggleButton playPauseButton;
     private final JSlider speedSlider;
 
-    // Neu: moderne Controls
     private final JLabel tpsLabel;
     private final JComboBox<String> themeCombo;
     private final JButton accentButton;
 
-    private Color accent = new Color(76, 139, 245); // Default Akzent
+    private Color accent = new Color(76, 139, 245);
     private boolean dark = true;
 
     public GameOfLifeFrame() {
@@ -27,7 +26,7 @@ public class GameOfLifeFrame extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        lifePanel = new GameOfLifePanel(60, 40, 16); // leicht größere Zellen
+        lifePanel = new GameOfLifePanel(60, 40, 16);
         lifePanel.applyTheme(dark, accent);
 
         generationLabel = new JLabel("Generation: 0");
@@ -41,7 +40,6 @@ public class GameOfLifeFrame extends JFrame {
         speedSlider.setPaintLabels(true);
         tpsLabel = new JLabel(speedSlider.getValue() + " t/s");
 
-        // Theme & Accent
         themeCombo = new JComboBox<>(new String[]{"Dark", "Light"});
         themeCombo.setSelectedItem(dark ? "Dark" : "Light");
         accentButton = new JButton("Accent");
@@ -50,7 +48,7 @@ public class GameOfLifeFrame extends JFrame {
         accentButton.setForeground(chooseForeground(accent));
         accentButton.setOpaque(true);
 
-        // Toolbar
+
         JToolBar toolbar = new JToolBar();
         toolbar.setFloatable(false);
         JButton stepButton = new JButton("Step");
@@ -78,7 +76,7 @@ public class GameOfLifeFrame extends JFrame {
         pack();
         setLocationRelativeTo(null);
 
-        // Aktionen
+
         playPauseButton.addActionListener(e -> {
             if (playPauseButton.isSelected()) {
                 playPauseButton.setText("Pause");
@@ -109,10 +107,10 @@ public class GameOfLifeFrame extends JFrame {
             tpsLabel.setText(v + " t/s");
         });
 
-        // Generation-Label bei Änderungen aktualisieren
+
         lifePanel.setOnGenerationChanged(gen -> generationLabel.setText("Generation: " + gen));
 
-        // Tastenkürzel: Leertaste = Start/Pause
+
         getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
                 .put(KeyStroke.getKeyStroke("SPACE"), "togglePlay");
         getRootPane().getActionMap().put("togglePlay", new AbstractAction() {
@@ -122,19 +120,19 @@ public class GameOfLifeFrame extends JFrame {
             }
         });
 
-        // Theme-Umschaltung
+
         themeCombo.addActionListener(e -> {
             dark = "Dark".equals(themeCombo.getSelectedItem());
             switchLaf(dark);
-            // Nach LAF-Wechsel UI refreshen und Theme anwenden
+
             FlatLaf.updateUI();
             lifePanel.applyTheme(dark, accent);
-            // Farben des Accent-Buttons ggf. anpassen, damit lesbar
+
             accentButton.setForeground(chooseForeground(accent));
             pack();
         });
 
-        // Accent-Farbwahl
+
         accentButton.addActionListener(e -> {
             Color chosen = JColorChooser.showDialog(this, "Accent-Farbe wählen", accent);
             if (chosen != null) {
@@ -158,7 +156,7 @@ public class GameOfLifeFrame extends JFrame {
     }
 
     private Color chooseForeground(Color bg) {
-        // Kontrastreiche Schrift auf dem Accent-Button
+
         double luma = 0.2126 * bg.getRed() + 0.7152 * bg.getGreen() + 0.0722 * bg.getBlue();
         return luma > 150 ? Color.BLACK : Color.WHITE;
     }

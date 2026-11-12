@@ -14,7 +14,7 @@ public class GameOfLifePanel extends JPanel {
     private boolean[][] grid;
     private boolean[][] buffer;
 
-    // Altersverfolgung für sanfte Farb-/Alpha-Übergänge
+
     private int[][] age;
     private int[][] ageBuffer;
 
@@ -27,7 +27,7 @@ public class GameOfLifePanel extends JPanel {
     private boolean drawing;
     private boolean drawState; // true -> set alive, false -> set dead
 
-    // Theme/Palette
+
     private boolean darkTheme = false;
     private Color accent = new Color(76, 139, 245);
     private Color bgTop = new Color(245, 247, 250);
@@ -81,7 +81,7 @@ public class GameOfLifePanel extends JPanel {
             }
         });
 
-        // Start mit hellem Theme
+
         applyTheme(false, accent);
     }
 
@@ -136,7 +136,7 @@ public class GameOfLifePanel extends JPanel {
     public void randomize() {
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
-                boolean alive = random.nextBoolean() && random.nextBoolean(); // ~25% lebend
+                boolean alive = random.nextBoolean() && random.nextBoolean();
                 grid[r][c] = alive;
                 age[r][c] = alive ? 1 : 0;
             }
@@ -222,7 +222,7 @@ public class GameOfLifePanel extends JPanel {
         try {
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-            // Hintergrund mit sanftem Verlauf
+
             Paint gp = new GradientPaint(0, 0, bgTop, 0, getHeight(), bgBottom);
             g2.setPaint(gp);
             g2.fillRect(0, 0, getWidth(), getHeight());
@@ -236,7 +236,7 @@ public class GameOfLifePanel extends JPanel {
                 g2.drawLine(0, y, cols * cellSize, y);
             }
 
-            // Zellen: abgerundet, mit Altersfarbverlauf
+
             int pad = Math.max(1, cellSize / 8);
             int arc = Math.max(8, cellSize / 2);
             for (int r = 0; r < rows; r++) {
@@ -248,7 +248,6 @@ public class GameOfLifePanel extends JPanel {
                     int w = cellSize - 2 * pad;
                     int h = cellSize - 2 * pad;
 
-                    // Alters-basiertes Blending und Alpha
                     int a = Math.min(age[r][c], 12);
                     float t = a / 12f;
                     Color bright = changeBrightness(accent, darkTheme ? 1.2f : 1.1f);
@@ -258,7 +257,7 @@ public class GameOfLifePanel extends JPanel {
                     Color fillA = new Color(fill.getRed(), fill.getGreen(), fill.getBlue(), alpha);
 
                     if (darkTheme) {
-                        // leichter Schatten
+
                         g2.setColor(new Color(0, 0, 0, 80));
                         g2.fillRoundRect(x + 1, y + 1, w, h, arc, arc);
                     }
@@ -266,7 +265,7 @@ public class GameOfLifePanel extends JPanel {
                     g2.setColor(fillA);
                     g2.fillRoundRect(x, y, w, h, arc, arc);
 
-                    // feiner Rand
+
                     Color border = changeBrightness(fill, darkTheme ? 0.75f : 0.9f);
                     g2.setColor(new Color(border.getRed(), border.getGreen(), border.getBlue(), clamp(alpha + 10, 60, 255)));
                     g2.drawRoundRect(x, y, w, h, arc, arc);
@@ -277,7 +276,7 @@ public class GameOfLifePanel extends JPanel {
         }
     }
 
-    // Hilfsfunktionen
+
 
     private int clamp(int v, int min, int max) {
         return Math.max(min, Math.min(max, v));
